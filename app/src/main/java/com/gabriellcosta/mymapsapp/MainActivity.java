@@ -15,6 +15,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     OnMarkerDragListener {
 
   private static final String TAG = "MainActivity";
+  private static final String LAT_KEY = "LAT_KEY";
+  private static final String LNG_KEY = "LNG_KEY";
   private MarkerOptions marker;
   private double lat;
   private double lng;
@@ -28,6 +30,24 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         .findFragmentById(R.id.fragment_main_map);
 
     mapFragment.getMapAsync(this);
+  }
+
+  @Override
+  protected void onSaveInstanceState(Bundle outState) {
+    super.onSaveInstanceState(outState);
+    outState.putDouble(LAT_KEY, lat);
+    outState.putDouble(LNG_KEY, lng);
+  }
+
+  @Override
+  protected void onRestoreInstanceState(Bundle savedInstanceState) {
+    super.onRestoreInstanceState(savedInstanceState);
+    if (savedInstanceState != null
+        && savedInstanceState.containsKey(LAT_KEY)
+        && savedInstanceState.containsKey(LNG_KEY)) {
+      lat = savedInstanceState.getDouble(LAT_KEY);
+      lng = savedInstanceState.getDouble(LNG_KEY);
+    }
   }
 
   @Override
