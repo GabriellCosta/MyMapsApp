@@ -6,10 +6,14 @@ import android.util.Log;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
 
   private static final String TAG = "MainActivity";
+  private MarkerOptions marker;
+  private double lat;
+  private double lng;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -25,5 +29,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
   @Override
   public void onMapReady(GoogleMap googleMap) {
     Log.v(TAG , "Map Ready to be used");
+    initMark();
+    googleMap.addMarker(marker);
+  }
+
+  private void initMark() {
+    marker = MarkerFactory.createSimpleMarker(lat, lng);
   }
 }
