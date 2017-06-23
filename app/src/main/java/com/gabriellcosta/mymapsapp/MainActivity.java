@@ -4,11 +4,15 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.OnMarkerDragListener;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class MainActivity extends AppCompatActivity implements OnMapReadyCallback,
+    OnMarkerDragListener {
 
   private static final String TAG = "MainActivity";
   private MarkerOptions marker;
@@ -31,9 +35,27 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     Log.v(TAG , "Map Ready to be used");
     initMark();
     googleMap.addMarker(marker);
+    googleMap.setOnMarkerDragListener(this);
   }
 
   private void initMark() {
     marker = MarkerFactory.createSimpleMarker(lat, lng);
+  }
+
+  @Override
+  public void onMarkerDragStart(Marker marker) {
+
+  }
+
+  @Override
+  public void onMarkerDrag(Marker marker) {
+
+  }
+
+  @Override
+  public void onMarkerDragEnd(Marker marker) {
+    final LatLng position = marker.getPosition();
+    lat = position.latitude;
+    lng = position.longitude;
   }
 }
