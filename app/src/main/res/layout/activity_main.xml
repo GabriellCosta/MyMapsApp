@@ -1,7 +1,26 @@
-<fragment xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
-  android:id="@+id/fragment_main_map"
   android:layout_width="match_parent"
-  android:layout_height="match_parent"
-  android:name="com.google.android.gms.maps.SupportMapFragment"
-  tools:context="com.gabriellcosta.mymapsapp.MainActivity" />
+  android:layout_height="match_parent">
+
+  <fragment
+    android:id="@+id/fragment_main_map"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:name="com.google.android.gms.maps.SupportMapFragment"
+    tools:context="com.gabriellcosta.mymapsapp.MainActivity" />
+
+
+  <ImageButton
+    android:contentDescription="@string/main_button_centralize"
+    android:id="@+id/imb_main_map"
+    android:layout_width="45dp"
+    android:layout_height="45dp"
+    android:layout_marginBottom="15dp"
+    android:layout_marginEnd="45dp"
+    android:layout_marginRight="45dp"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintRight_toRightOf="parent" />
+
+</android.support.constraint.ConstraintLayout>
