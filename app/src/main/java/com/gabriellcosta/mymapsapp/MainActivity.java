@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.View.OnClickListener;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMarkerDragListener;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -56,11 +58,19 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
   }
 
   @Override
-  public void onMapReady(GoogleMap googleMap) {
+  public void onMapReady(final GoogleMap googleMap) {
     Log.v(TAG , "Map Ready to be used");
     initMark();
     googleMap.addMarker(marker);
     googleMap.setOnMarkerDragListener(this);
+    imageButton.setOnClickListener(new OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        googleMap.animateCamera(CameraUpdateFactory
+        .newLatLng(new LatLng(lat, lng)));
+      }
+    });
+
   }
 
   private void initMark() {
