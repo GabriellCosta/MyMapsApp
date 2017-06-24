@@ -3,6 +3,8 @@ package com.gabriellcosta.mymapsapp;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -20,6 +22,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
   private static final String TAG = "MainActivity";
   private static final String LAT_KEY = "LAT_KEY";
   private static final String LNG_KEY = "LNG_KEY";
+  public static final int RC_PLACES_AUTOCOMPLETE = 231;
   private MarkerOptions marker;
   private double lat;
   private double lng;
@@ -59,7 +62,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
   @Override
   public void onMapReady(final GoogleMap googleMap) {
-    Log.v(TAG , "Map Ready to be used");
+    Log.v(TAG, "Map Ready to be used");
     initMark();
     googleMap.addMarker(marker);
     googleMap.setOnMarkerDragListener(this);
@@ -67,10 +70,30 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
       @Override
       public void onClick(View v) {
         googleMap.animateCamera(CameraUpdateFactory
-        .newLatLng(new LatLng(lat, lng)));
+            .newLatLng(new LatLng(lat, lng)));
       }
     });
 
+  }
+
+  @Override
+  public boolean onCreateOptionsMenu(Menu menu) {
+    getMenuInflater().inflate(R.menu.menu, menu);
+    return super.onCreateOptionsMenu(menu);
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    final boolean result;
+    final int itemId = item.getItemId();
+
+    if (itemId == R.id.menu_search) {
+      result = true;
+    } else {
+      result = false;
+    }
+
+    return result;
   }
 
   private void initMark() {
