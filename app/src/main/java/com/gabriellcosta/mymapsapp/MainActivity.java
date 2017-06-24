@@ -1,5 +1,6 @@
 package com.gabriellcosta.mymapsapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -7,6 +8,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.location.places.ui.PlaceAutocomplete;
+import com.google.android.gms.location.places.ui.PlaceAutocomplete.IntentBuilder;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMarkerDragListener;
@@ -22,7 +27,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
   private static final String TAG = "MainActivity";
   private static final String LAT_KEY = "LAT_KEY";
   private static final String LNG_KEY = "LNG_KEY";
-  public static final int RC_PLACES_AUTOCOMPLETE = 231;
+  private static final int RC_PLACES_AUTOCOMPLETE = 231;
   private MarkerOptions marker;
   private double lat;
   private double lng;
@@ -88,12 +93,32 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     final int itemId = item.getItemId();
 
     if (itemId == R.id.menu_search) {
+      startPlaceAutoComplete();
       result = true;
     } else {
       result = false;
     }
 
     return result;
+  }
+
+  private void startPlaceAutoComplete() {
+    try {
+      final Intent intentBuilder = new IntentBuilder(PlaceAutocomplete.MODE_OVERLAY)
+          .build(this);
+      startActivityForResult(intentBuilder, RC_PLACES_AUTOCOMPLETE);
+    } catch (GooglePlayServicesRepairableException | GooglePlayServicesNotAvailableException e) {
+      Log.e(TAG, e.getMessage(), e);
+    }
+
+  }
+
+  @Override
+  protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
+
+
+
   }
 
   private void initMark() {
