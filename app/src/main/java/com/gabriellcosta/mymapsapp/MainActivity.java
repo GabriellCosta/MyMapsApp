@@ -3,6 +3,7 @@ package com.gabriellcosta.mymapsapp;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMarkerDragListener;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -21,15 +22,19 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
   private double lat;
   private double lng;
 
+  private View imageButton;
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
+    initViews();
 
     SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
         .findFragmentById(R.id.fragment_main_map);
 
     mapFragment.getMapAsync(this);
+
   }
 
   @Override
@@ -77,5 +82,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     final LatLng position = marker.getPosition();
     lat = position.latitude;
     lng = position.longitude;
+  }
+
+  private void initViews() {
+    imageButton = findViewById(R.id.imb_main_map);
   }
 }
