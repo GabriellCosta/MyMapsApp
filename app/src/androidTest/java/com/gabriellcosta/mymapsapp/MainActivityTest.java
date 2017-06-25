@@ -4,7 +4,6 @@ package com.gabriellcosta.mymapsapp;
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
 
 import android.support.test.uiautomator.UiDevice;
-import android.support.test.uiautomator.UiObject;
 import android.support.test.uiautomator.UiObjectNotFoundException;
 import android.support.test.uiautomator.UiSelector;
 import org.junit.Before;
@@ -14,15 +13,15 @@ public class MainActivityTest {
 
   private UiDevice device;
 
-  @Before public void setup() {
+  @Before
+  public void setup() {
     device = UiDevice.getInstance(getInstrumentation());
     AppLauncherUtil.launchApp(device);
   }
 
-  @Test public void shouldShowMarkerWhenStarted() throws UiObjectNotFoundException {
-    UiObject marker = device
-        .findObject(new UiSelector().descriptionContains(MarkerFactory.MARKER_TITLE));
-    marker.click();
+  @Test
+  public void shouldShowMarkerWhenStarted() throws UiObjectNotFoundException {
+    device.findObject(new UiSelector().descriptionContains(MarkerFactory.MARKER_TITLE));
   }
 
 }
