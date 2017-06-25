@@ -29,6 +29,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
   private GoogleMapsManager googleMapsManagerImpl;
 
   private View imageButton;
+  private PreferenceManager preferenceManager;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +48,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         googleMapsManagerImpl.moveToMarker();
       }
     });
+
+    preferenceManager = new PreferenceManager(this);
 
   }
 
@@ -120,13 +123,21 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
   }
 
+  @Override
+  protected void onPause() {
+    super.onPause();
+    preferenceManager.saveLocation(googleMapsManagerImpl.getMarker().getPosition());
+  }
+
   private void initMark() {
     final double lat, lng;
     if (position != null) {
       lat = position.latitude;
       lng = position.longitude;
     } else {
-      lat = lng = 0.0;
+      LatLng location = preferenceManager.getLocation();
+      lat = location.latitude;
+      lng = location.longitude;
     }
     marker = MarkerFactory.createSimpleMarker(lat, lng);
   }
