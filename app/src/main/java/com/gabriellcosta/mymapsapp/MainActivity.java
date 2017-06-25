@@ -10,27 +10,23 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete.IntentBuilder;
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.GoogleMap.OnMarkerDragListener;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class MainActivity extends AppCompatActivity implements OnMapReadyCallback,
-    OnMarkerDragListener {
+public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
 
   private static final String TAG = "MainActivity";
-  private static final String LAT_KEY = "LAT_KEY";
-  private static final String LNG_KEY = "LNG_KEY";
+  private static final String POSITION_KEY = "POSITION_KEY";
   private static final int RC_PLACES_AUTOCOMPLETE = 231;
   private MarkerOptions marker;
-  private double lat;
-  private double lng;
+  private LatLng position;
+  private GoogleMapsManager googleMapsManagerImpl;
 
   private View imageButton;
 
@@ -45,23 +41,27 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     mapFragment.getMapAsync(this);
 
+    imageButton.setOnClickListener(new OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        googleMapsManagerImpl.moveToMarker();
+      }
+    });
+
   }
 
   @Override
   protected void onSaveInstanceState(Bundle outState) {
     super.onSaveInstanceState(outState);
-    outState.putDouble(LAT_KEY, lat);
-    outState.putDouble(LNG_KEY, lng);
+    outState.putParcelable(POSITION_KEY, googleMapsManagerImpl.getMarker().getPosition());
   }
 
   @Override
   protected void onRestoreInstanceState(Bundle savedInstanceState) {
     super.onRestoreInstanceState(savedInstanceState);
     if (savedInstanceState != null
-        && savedInstanceState.containsKey(LAT_KEY)
-        && savedInstanceState.containsKey(LNG_KEY)) {
-      lat = savedInstanceState.getDouble(LAT_KEY);
-      lng = savedInstanceState.getDouble(LNG_KEY);
+        && savedInstanceState.containsKey(POSITION_KEY)) {
+      position = savedInstanceState.getParcelable(POSITION_KEY);
     }
   }
 
@@ -69,15 +69,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
   public void onMapReady(final GoogleMap googleMap) {
     Log.v(TAG, "Map Ready to be used");
     initMark();
-    googleMap.addMarker(marker);
-    googleMap.setOnMarkerDragListener(this);
-    imageButton.setOnClickListener(new OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        googleMap.animateCamera(CameraUpdateFactory
-            .newLatLng(new LatLng(lat, lng)));
-      }
-    });
+    googleMapsManagerImpl = new GoogleMapsManagerImpl(googleMap, marker);
+    googleMapsManagerImpl.update();
 
   }
 
@@ -117,29 +110,25 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
 
+    if (resultCode == RESULT_OK && requestCode == RC_PLACES_AUTOCOMPLETE) {
+      final Place place = PlaceAutocomplete.getPlace(this, data);
+      Log.i(TAG, "Place: " + place.getName());
+      googleMapsManagerImpl.update(place);
+      setTitle(place.getName());
 
+    }
 
   }
 
   private void initMark() {
+    final double lat, lng;
+    if (position != null) {
+      lat = position.latitude;
+      lng = position.longitude;
+    } else {
+      lat = lng = 0.0;
+    }
     marker = MarkerFactory.createSimpleMarker(lat, lng);
-  }
-
-  @Override
-  public void onMarkerDragStart(Marker marker) {
-
-  }
-
-  @Override
-  public void onMarkerDrag(Marker marker) {
-
-  }
-
-  @Override
-  public void onMarkerDragEnd(Marker marker) {
-    final LatLng position = marker.getPosition();
-    lat = position.latitude;
-    lng = position.longitude;
   }
 
   private void initViews() {
