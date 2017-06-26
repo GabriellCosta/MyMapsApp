@@ -15,7 +15,7 @@ final class FavoriteEntry implements BaseColumns {
   static final int LONGITUDE_INDEX = 3;
 
   static final String CREATE_TABLE = String.format(
-      "CREATE TABLE %s (%s INTEGER PRIMARY KEY,%s TEXT NOT NULL,%s REAL NOT NULL,%s REAL NOT NULL);",
+      "CREATE TABLE %s (%s INTEGER PRIMARY KEY,%s TEXT NOT NULL,%s REAL unique NOT NULL,%s REAL unique NOT NULL);",
       TABLE_NAME, _ID, NAME, LATITUDE, LONGITUDE);
 
   static final String DROP_TABLE = "DROP TABLE IF EXISTS" + TABLE_NAME;
