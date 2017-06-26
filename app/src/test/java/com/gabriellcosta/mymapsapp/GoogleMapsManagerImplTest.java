@@ -5,9 +5,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.powermock.api.mockito.PowerMockito.mock;
-import static org.powermock.api.mockito.PowerMockito.when;
 
-import com.google.android.gms.location.places.Place;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -64,10 +62,8 @@ public class GoogleMapsManagerImplTest {
 
   @Test
   public void whenUpdateMark_ShouldChangeMarkerPosition() {
-    final Place mock = mock(Place.class);
     final LatLng expectedPosition = new LatLng(99, 99);
-    when(mock.getLatLng()).thenReturn(expectedPosition);
-    manager.update(mock);
+    manager.update(expectedPosition);
     final LatLng actualPosition = manager.getMarker().getPosition();
     assertEquals(expectedPosition, actualPosition);
     verify(googleMap).clear();
