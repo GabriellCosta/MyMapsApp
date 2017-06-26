@@ -8,6 +8,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import com.gabriellcosta.mymapsapp.data.FavoriteDAO;
+import com.gabriellcosta.mymapsapp.data.FavoriteDAOImpl;
+import com.gabriellcosta.mymapsapp.data.FavoritePlaceVO;
+import com.gabriellcosta.mymapsapp.data.FavoritePlacesDBHelper;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
@@ -18,6 +22,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -27,6 +32,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
   private MarkerOptions marker;
   private LatLng position;
   private GoogleMapsManager googleMapsManagerImpl;
+  private FavoriteDAO dao;
 
   private View imageButton;
   private PreferenceManager preferenceManager;
@@ -50,6 +56,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     });
 
     preferenceManager = new PreferenceManager(this);
+    dao = new FavoriteDAOImpl(new FavoritePlacesDBHelper(this));
 
   }
 
@@ -66,6 +73,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         && savedInstanceState.containsKey(POSITION_KEY)) {
       position = savedInstanceState.getParcelable(POSITION_KEY);
     }
+  }
+
+  @Override
+  protected void onDestroy() {
+    dao.close();
+    super.onDestroy();
   }
 
   @Override
@@ -91,6 +104,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     if (itemId == R.id.menu_search) {
       startPlaceAutoComplete();
       result = true;
+    } else if (itemId == R.id.menu_add_favorite) {
+      LatLng position = googleMapsManagerImpl.getMarker().getPosition();
+      FavoritePlaceVO favoritePlaceVO = new FavoritePlaceVO(0, getTitle().toString(),
+          position.latitude, position.longitude);
+      dao.insert(favoritePlaceVO);
+      result = true;
+    } else if (itemId == R.id.menu_fav){
+      List<FavoritePlaceVO> fetch = dao.fetch();
+      result = false;
     } else {
       result = false;
     }
@@ -116,7 +138,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     if (resultCode == RESULT_OK && requestCode == RC_PLACES_AUTOCOMPLETE) {
       final Place place = PlaceAutocomplete.getPlace(this, data);
       Log.i(TAG, "Place: " + place.getName());
-      googleMapsManagerImpl.update(place);
+      googleMapsManagerImpl.update(place.getLatLng());
       setTitle(place.getName());
 
     }

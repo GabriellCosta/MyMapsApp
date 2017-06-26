@@ -1,6 +1,6 @@
 package com.gabriellcosta.mymapsapp;
 
-import com.google.android.gms.location.places.Place;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 /**
@@ -16,9 +16,9 @@ public interface GoogleMapsManager {
 
   /**
    * Update google maps positions placing a Marker with a given position
-   * @param place
+   * @param latLng
    */
-  void update(Place place);
+  void update(LatLng latLng);
 
   /**
    * Move camera to Marker

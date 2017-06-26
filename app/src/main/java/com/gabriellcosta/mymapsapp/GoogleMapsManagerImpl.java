@@ -5,6 +5,7 @@ import com.google.android.gms.location.places.Place;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMarkerDragListener;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -31,8 +32,8 @@ public final class GoogleMapsManagerImpl implements GoogleMapsManager, OnMarkerD
   }
 
   @Override
-  public void update(Place place) {
-    marker.position(place.getLatLng());
+  public void update(LatLng latLng) {
+    marker.position(latLng);
     update();
   }
 
