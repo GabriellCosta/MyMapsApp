@@ -7,6 +7,10 @@
     android:title="@string/main_menu_search"
     app:showAsAction="ifRoom" />
 
+  <item android:id="@+id/menu_add_favorite"
+    android:title="@string/main_menu_add_favorite"
+    app:showAsAction="ifRoom"/>
+
   <item
     android:id="@+id/menu_fav"
     android:title="@string/main_menu_favorite"

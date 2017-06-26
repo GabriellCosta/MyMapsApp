@@ -3,5 +3,6 @@
   <string name="main_button_centralize">Centralize</string>
   
   <string name="main_menu_search">Search</string>
+  <string name="main_menu_add_favorite">Add Favorite</string>
   <string name="main_menu_favorite">Favorite</string>
 </resources>
