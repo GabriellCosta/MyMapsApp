@@ -24,24 +24,24 @@ public class FavoriteDAOImplTest {
 
   @Test
   public void shouldSaveInsertedValuesOnDatabase() {
-    FavoritePlaceVO mock = new FavoritePlaceVO(1, "MOCK", 44.968046,   -94.420307);
-    FavoritePlaceVO mock2 = new FavoritePlaceVO(2, "MOCK2", 14.0, 11.0);
+    FavoritePlaceVO mock = new FavoritePlaceVO(5, "MOCK", 44.968046,   -94.420307);
+    FavoritePlaceVO mock2 = new FavoritePlaceVO(6, "MOCK2", 14.0, 11.0);
     dao.insert(mock);
     dao.insert(mock);
     dao.insert(mock2);
 
     final List<FavoritePlaceVO> fetch = dao.fetch();
-    assertEquals(2, fetch.size());
+    assertEquals(6, fetch.size());
 
-    assertEquals(mock, fetch.get(0));
-    assertEquals(mock2, fetch.get(1));
+    assertEquals(mock, fetch.get(4));
+    assertEquals(mock2, fetch.get(5));
 
     dao.delete(1);
 
     List<FavoritePlaceVO> fetchAfterDelete = dao.fetch();
 
-    assertEquals(1, fetchAfterDelete.size());
-    assertEquals(mock, fetch.get(0));
+    assertEquals(5, fetchAfterDelete.size());
+    assertEquals(mock, fetch.get(4));
 
     dao.delete(1);
   }
