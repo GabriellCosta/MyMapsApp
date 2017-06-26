@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import com.gabriellcosta.mymapsapp.FavoriteDialog.DialogItemClick;
 import com.gabriellcosta.mymapsapp.data.FavoriteDAO;
 import com.gabriellcosta.mymapsapp.data.FavoriteDAOImpl;
 import com.gabriellcosta.mymapsapp.data.FavoritePlaceVO;
@@ -24,7 +25,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, DialogItemClick {
 
   private static final String TAG = "MainActivity";
   private static final String POSITION_KEY = "POSITION_KEY";
@@ -112,6 +113,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
       result = true;
     } else if (itemId == R.id.menu_fav){
       List<FavoritePlaceVO> fetch = dao.fetch();
+      FavoriteDialog.showDialog(this, fetch, this);
       result = false;
     } else {
       result = false;
@@ -166,5 +168,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
   private void initViews() {
     imageButton = findViewById(R.id.imb_main_map);
+  }
+
+  @Override
+  public void dialogItemChoosed(FavoritePlaceVO item) {
+    googleMapsManagerImpl.update(new LatLng(item.getLatitute(), item.getLongitude()));
+  }
+
+  @Override
+  public void deletedItemChoosed(FavoritePlaceVO item) {
+
   }
 }
