@@ -113,7 +113,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
       result = true;
     } else if (itemId == R.id.menu_fav){
       List<FavoritePlaceVO> fetch = dao.fetch();
-      FavoriteDialog.showDialog(this, fetch, this);
+      new FavoriteDialog().showDialog(this, fetch, this);
       result = false;
     } else {
       result = false;
@@ -177,6 +177,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
   @Override
   public void deletedItemChoosed(FavoritePlaceVO item) {
-
+    dao.delete(item.getId());
   }
 }
